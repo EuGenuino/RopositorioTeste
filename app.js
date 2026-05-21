@@ -12,6 +12,126 @@ const STATE = {
     rawMarkdown: ''
 };
 
+// =============================================================
+// NICHE PROFILES — Calibração de regras por nicho
+// =============================================================
+// Cada perfil define palavras-chave que o `detectNicheProfile` usa
+// para identificar o nicho a partir do campo livre digitado pelo usuário,
+// e um bloco `directives` que é injetado no prompt do Gemini.
+// Esses ajustes PRECEDEM as regras universais — quando houver conflito,
+// o modelo deve seguir o perfil específico.
+const NICHE_PROFILES = {
+    review: {
+        label: 'Review de Produtos',
+        keywords: [
+            'review', 'reviews', 'análise', 'analise', 'unboxing',
+            'comparativo', 'produto', 'produtos', 'tech', 'gadget',
+            'gadgets', 'teste', 'testando', 'opinião sincera', 'vale a pena'
+        ],
+        directives: `
+DIRETRIZES ESPECÍFICAS PARA NICHO DE REVIEW DE PRODUTOS:
+- Nome ou modelo do produto no título é OBRIGATÓRIO. Não penalize comprimento causado pelo nome técnico do produto (ex.: "iPhone 17 Pro Max", "Galaxy S26 Ultra").
+- Números no título (preço, modelo, ano, geração) AGREGAM valor neste nicho — IGNORE a regra geral de penalização por números. Aqui números servem de gancho de busca e qualificador de relevância.
+- Títulos comparativos e de decisão de compra performam ACIMA da média: "X vs Y", "Vale a pena em [ano]?", "Antes de comprar...", "[Produto] depois de [tempo de uso]". Bonifique fortemente quando presentes.
+- Títulos com tom de aviso/alerta ("Não compre antes de ver", "O que ninguém te conta sobre...", "Cuidado com esse [produto]") convertem fortemente — bonifique.
+- Thumbnail: o PRODUTO precisa estar visualmente reconhecível e dominar pelo menos 30-50% da composição. Reprove se o produto está pequeno, cortado de forma que perde identidade ou pouco distintivo do fundo.
+- Thumbnail: combo "produto físico + reação facial expressiva (positiva ou negativa)" é o padrão de maior CTR neste nicho. Polegar para baixo, expressão de choque, surpresa ou decepção funcionam fortemente.
+- Thumbnail: marcadores visuais como setas, círculos vermelhos, "X" sobre defeitos ou "✓" sobre qualidades são ACEITÁVEIS e comuns aqui — NÃO trate como sinal de amadorismo. Trate como linguagem visual do nicho.
+- Thumbnail: preço destacado em badge funciona ("R$ 1.299"). Trate como elemento legítimo, não como "número penalizável".
+- SEO no título AINDA funciona neste nicho — palavras-chave técnicas (modelo, especificação, "review", "análise") são positivas. NÃO aplique a regra geral de "SEO morreu".
+- Hook: deve mostrar o produto FISICAMENTE nos primeiros 5 segundos. Hook que demora a apresentar o produto é reprovado.
+- Hook: declarar conflito de interesse logo no início ("comprei com meu próprio dinheiro" / "fui patrocinado pela X mas a opinião é minha") aumenta credibilidade — bonifique quando presente.
+- Hook: declarar tempo de uso real ("usei por 30 dias", "testei por 3 meses", "venho usando há 1 ano") é sinal de autoridade — bonifique.
+- Hook: deve prometer explicitamente um veredicto ("no final desse vídeo eu vou te dizer se vale a pena ou não"). Penalize hooks que não prometem essa entrega.
+- Duração ideal: 8-15 minutos para reviews diretos. Espectador quer decisão de compra rápida, não palestra. Vídeos acima de 20 min só funcionam para comparativos profundos ou long-term reviews.
+- Veredicto explícito ("vale a pena?", "recomendo?", "comprar ou esperar?") deve ser parte da promessa do pacote thumb+título — sinalize se isso estiver ausente.
+`
+    },
+    tutorial: {
+        label: 'Tutorial / How-to',
+        keywords: [
+            'tutorial', 'tutoriais', 'how-to', 'how to', 'passo a passo',
+            'aprender', 'curso', 'cursos', 'aulas', 'aula', 'guia',
+            'iniciante', 'iniciantes', 'do zero', 'ensino'
+        ],
+        directives: `
+DIRETRIZES ESPECÍFICAS PARA NICHO DE TUTORIAL:
+- SEO no título AINDA funciona neste nicho (busca direta é forte). Palavras-chave técnicas e específicas devem ser preservadas. NÃO penalize comprimento se for por causa de termos buscáveis essenciais.
+- Títulos com números ("5 erros...", "10 dicas...", "3 passos para...") performam BEM em tutoriais — IGNORE a regra geral de penalização por números.
+- Rosto na thumbnail é MENOS crítico. Capturas de tela, ferramenta sendo usada, before/after ou resultado final podem substituir o rosto sem perda de CTR.
+- Capítulos do roteiro são item OBRIGATÓRIO no scorecard de retenção (espectadores pulam para o passo que precisam). Sinalize fortemente se ausentes.
+- Duração: vídeos de 20-40 min com capítulos performam melhor que vídeos curtos cortando informação. NÃO penalize duração longa.
+- Hook: pode declarar promessa direta ("ao final desse vídeo você vai conseguir X") — neste nicho é menos sobre tensão emocional e mais sobre promessa explícita de payoff prático.
+- Títulos podem ser ligeiramente mais formais e técnicos. Não penalize por isso.
+`
+    },
+    entretenimento: {
+        label: 'Entretenimento',
+        keywords: [
+            'entretenimento', 'humor', 'comédia', 'comedia', 'vlog',
+            'vlogs', 'gameplay', 'jogos', 'games', 'reacts', 'reação',
+            'reacao', 'pegadinha', 'desafio', 'challenge'
+        ],
+        directives: `
+DIRETRIZES ESPECÍFICAS PARA NICHO DE ENTRETENIMENTO:
+- Títulos negativos, controversos ou de choque PESAM MAIS — bonifique fortemente quando presentes e penalize títulos chapados/positivos.
+- Hook nos primeiros 90 segundos é OBRIGATÓRIO. Considere REPROVADO qualquer hook que demore a apresentar o conflito/payoff/resultado.
+- Thumbnail: expressão facial extrema (choque, riso exagerado, indignação) é diferencial decisivo — bonifique.
+- SEO no título é IRRELEVANTE — penalize keyword stuffing como sinal de amador.
+- Duração ideal: 12-24 minutos.
+- Saudações longas, vinhetas ou "fala galera" no hook são PESADAMENTE penalizados.
+`
+    },
+    noticias: {
+        label: 'Notícias / Atualidades',
+        keywords: [
+            'notícias', 'noticias', 'news', 'jornalismo', 'atualidade',
+            'atualidades', 'política', 'politica', 'mercado', 'economia',
+            'cotidiano', 'urgente'
+        ],
+        directives: `
+DIRETRIZES ESPECÍFICAS PARA NICHO DE NOTÍCIAS:
+- Duração mais CURTA (8-12 minutos) é ACEITÁVEL e até preferível. NÃO aplique o critério geral de "mínimo 12 min".
+- Atualidade do título é crítica — datas, anos e referências temporais AGREGAM valor (oposto da regra geral de evitar números).
+- Thumbnail: composição "personagem público + reação/emoção" é padrão eficaz do nicho.
+- Hook: deve estabelecer a notícia em ~15s. NÃO há tempo para construção dramática longa.
+- Títulos podem ser ligeiramente mais longos (até 8 palavras) se carregarem informação substantiva.
+- Tom de urgência ("AGORA", "URGENTE", "ÚLTIMAS") é aceitável mas se overusado vira ruído — penalize repetição.
+`
+    },
+    educacional: {
+        label: 'Educacional / Conhecimento',
+        keywords: [
+            'educacional', 'educação', 'educacao', 'ciência', 'ciencia',
+            'história', 'historia', 'aprendizado', 'conhecimento',
+            'filosofia', 'matemática', 'matematica', 'física', 'fisica',
+            'biologia', 'curiosidade'
+        ],
+        directives: `
+DIRETRIZES ESPECÍFICAS PARA NICHO EDUCACIONAL:
+- Capítulos do roteiro são item OBRIGATÓRIO no scorecard.
+- Títulos em formato de pergunta ("Por que...", "Como...", "O que aconteceria se...") performam bem — NÃO penalize.
+- Lacuna de curiosidade tem peso MAIOR — bonifique quando o título promete revelação intelectual genuína.
+- Thumbnail: ilustrações conceituais, infográficos ou imagens históricas/científicas podem substituir rosto sem perda de CTR.
+- Duração ideal: 15-40 minutos. Vídeos curtos demais sinalizam superficialidade neste nicho — penalize duração abaixo de 10 min.
+- Hook deve estabelecer relevância prática nos primeiros 30s ("por que você deveria se importar com isso").
+- Linguagem ligeiramente mais formal é aceitável — não penalize.
+`
+    }
+};
+
+function detectNicheProfile(nicheText) {
+    if (!nicheText) return null;
+    const t = nicheText.toLowerCase().trim();
+    if (!t) return null;
+    for (const profile of Object.values(NICHE_PROFILES)) {
+        if (profile.keywords.some(kw => t.includes(kw))) {
+            return profile;
+        }
+    }
+    return null;
+}
+
 // DOM ELEMENTS
 const el = {
     // Header
@@ -624,6 +744,20 @@ async function runGeminiAnalysis() {
     const hookContext = STATE.hook ? `Texto do Hook (roteiro inicial): "${STATE.hook}"` : 'Texto do Hook: Não especificado pelo usuário.';
     
     const hasHook = STATE.hook && STATE.hook.trim().length > 0;
+
+    // Detecta perfil de nicho via keyword matching e prepara bloco
+    // de calibração específica que será injetado no prompt.
+    const nicheProfile = detectNicheProfile(STATE.niche);
+    const nicheCalibration = nicheProfile ? `
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+CALIBRAÇÃO ESPECÍFICA PARA O NICHO: ${nicheProfile.label.toUpperCase()}
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+As diretrizes abaixo PRECEDEM e AJUSTAM as regras universais. Quando houver conflito entre uma regra universal e uma diretriz deste perfil de nicho, SIGA A DIRETRIZ DO NICHO. Aplique este perfil em todos os scorecards, problemas críticos, melhorias e sugestões de título.
+${nicheProfile.directives}` : '';
+
+    if (nicheProfile) {
+        showToast(`Calibrando análise para nicho: ${nicheProfile.label}`);
+    }
     
     let hookDirectives = '';
     let hookScorecardFormat = '';
@@ -714,7 +848,7 @@ SISTEMA DE PONTUAÇÃO DOS SCORECARDS
 2. SCORECARD DO TÍTULO: Pontue de 0 a 10 cada dimensão de títulos e sinergia, com uma observação rápida (máximo 60 caracteres).
 ${hasHook ? '3. SCORECARD DO HOOK: Avalie os 4 testes essenciais com Status (✅ Aprovado, ⚠️ Melhorável ou ❌ Reprovado) e observação rápida.' : ''}
 ${scoreExplanation}
-
+${nicheCalibration}
 FORMATO DE RESPOSTA OBRIGATÓRIO (SIGA À RISCA, EXATAMENTE ESSA ORDEM E ESSES MARCADORES DE SEÇÃO):
 
 ---

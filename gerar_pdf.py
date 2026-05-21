@@ -447,7 +447,76 @@ for i, m in enumerate(mandamentos, 1):
     numerado(i, m)
 
 # 13
-h1("13. Reflexao de fechamento")
+h1("13. Calibracao por nicho - perfis especificos")
+p("As regras gerais ate aqui (titulos curtos, evitar numeros, etc.) sao um excelente ponto de partida, mas a plataforma se comporta de modo diferente conforme o nicho. Cada perfil abaixo lista as exceções e refinamentos que predominam sobre as regras universais quando o canal opera naquele segmento. Se o seu nicho aparece aqui, aplique este perfil; se nao, use as regras gerais como default.")
+
+h2("13.1 Review de Produtos")
+p("Talvez o nicho com mais excecoes a regra geral. O espectador chega para tomar uma decisao de compra - quer informacao especifica e veredicto, nao mistério.")
+bullet("Nome ou modelo do produto NO TITULO e obrigatorio (ex.: \"iPhone 17 Pro Max\", \"Galaxy S26 Ultra\"). Nao penalize comprimento causado pelo nome tecnico.")
+bullet("Numeros no titulo (preco, modelo, ano, geracao) AGREGAM valor - sao gancho de busca e qualificador de relevancia. Ignore a regra geral de penalizar numeros.")
+bullet("Titulos comparativos performam acima da media: \"X vs Y\", \"Vale a pena em [ano]?\", \"Antes de comprar...\", \"[Produto] depois de [tempo de uso]\".")
+bullet("Titulos de aviso/alerta convertem fortemente: \"Nao compre antes de ver\", \"O que ninguem te conta sobre...\", \"Cuidado com esse [produto]\".")
+bullet("O produto precisa estar VISUALMENTE RECONHECIVEL na thumbnail e dominar 30-50% da composicao. Produto pequeno, cortado ou indistinto e reprovado.")
+bullet("Combo de maior CTR: produto fisico + reacao facial expressiva (positiva ou negativa). Polegar para baixo, choque, surpresa, decepcao.")
+bullet("Marcadores visuais (setas, circulos vermelhos, X sobre defeitos, V sobre qualidades) sao ACEITAVEIS aqui - linguagem visual do nicho, NAO sinal de amadorismo.")
+bullet("Preco em badge funciona (ex.: \"R$ 1.299\", \"-40%\"). Trate como elemento legitimo.")
+bullet("SEO no titulo AINDA funciona neste nicho - palavras como \"review\", \"analise\", modelo e especificacao tecnica sao positivas.")
+bullet("Hook deve mostrar o produto FISICAMENTE nos primeiros 5 segundos. Hook que demora a apresentar o produto e reprovado.")
+bullet("Declarar conflito de interesse no inicio (\"comprei com meu dinheiro\" / \"fui patrocinado mas a opiniao e minha\") aumenta credibilidade.")
+bullet("Declarar tempo de uso real (\"usei por 30 dias\", \"testei por 3 meses\", \"venho usando ha 1 ano\") e sinal de autoridade - bonifique.")
+bullet("Hook deve prometer EXPLICITAMENTE um veredicto (\"no final desse video eu te digo se vale a pena ou nao\"). Sem essa promessa, retencao despenca.")
+
+tabela(
+    ["Item", "Regra do nicho Review"],
+    [
+        ["Duracao ideal (review direto)", "8 a 15 minutos"],
+        ["Duracao para comparativo profundo", "20 a 30 minutos"],
+        ["Numero de palavras no titulo", "Ate 8 palavras (mais que a regra geral)"],
+        ["Numeros no titulo", "Sempre OK (modelo, preco, ano)"],
+        ["SEO no titulo", "Funciona - aplicar"],
+        ["Texto na thumbnail", "Pode usar preco/marcador, max 4 palavras"],
+        ["Veredicto explicito", "Obrigatorio na promessa do pacote"],
+    ]
+)
+destaque("Erro classico nesse nicho: review chapado e neutro \"em cima do muro\". Espectador quer opiniao firme. Quem nao se posiciona, nao retem.")
+
+h2("13.2 Tutorial / How-to")
+bullet("SEO no titulo AINDA funciona (busca direta e forte). Palavras-chave tecnicas devem ser preservadas mesmo que o titulo fique mais longo.")
+bullet("Numeros performam BEM aqui (\"5 erros...\", \"10 dicas...\", \"3 passos para...\"). Ignore a regra geral de penalizacao por numeros.")
+bullet("Rosto na thumbnail e MENOS critico. Captura de tela, ferramenta em uso, before/after ou resultado final substituem o rosto sem perda.")
+bullet("Capitulos no roteiro sao OBRIGATORIOS - espectador pula para o passo que precisa.")
+bullet("Duracao de 20-40 min com capitulos performa melhor que video curto cortando informacao.")
+bullet("Hook pode ser promessa direta (\"ao final desse video voce vai conseguir X\"). Menos sobre tensao, mais sobre payoff pratico.")
+
+h2("13.3 Entretenimento / Vlog / Gameplay / Reacts")
+bullet("Titulos negativos, controversos e de choque PESAM MAIS - bonifique fortemente. Penalize titulos chapados/positivos.")
+bullet("Hook nos primeiros 90 segundos e OBRIGATORIO. Reprovacao automatica se demorar.")
+bullet("Expressao facial extrema na thumb (choque, riso exagerado, indignacao) e diferencial decisivo.")
+bullet("SEO no titulo e IRRELEVANTE - keyword stuffing aqui sinaliza amador.")
+bullet("Saudacoes longas, vinhetas, \"fala galera\" no inicio sao pesadamente penalizadas.")
+bullet("Duracao ideal: 12 a 24 minutos.")
+
+h2("13.4 Noticias / Atualidades")
+bullet("Duracao mais CURTA (8-12 min) e ACEITAVEL e ate preferivel. Nao aplique o minimo geral de 12 min.")
+bullet("Atualidade no titulo e critica - datas, anos, referencias temporais AGREGAM valor (oposto da regra geral).")
+bullet("Composicao \"personagem publico + reacao/emocao\" e o padrao eficaz da thumb.")
+bullet("Hook deve estabelecer a noticia em ~15s - sem construcao dramatica longa.")
+bullet("Titulos podem ser ate 8 palavras se carregarem informacao substantiva.")
+bullet("Tom de urgencia (\"AGORA\", \"URGENTE\", \"ULTIMAS\") e aceitavel mas overuso vira ruido.")
+
+h2("13.5 Educacional / Conhecimento")
+bullet("Capitulos no roteiro sao OBRIGATORIOS no scorecard.")
+bullet("Titulos em formato de pergunta (\"Por que...\", \"Como...\", \"O que aconteceria se...\") performam bem - nao penalize.")
+bullet("Lacuna de curiosidade tem peso MAIOR - bonifique quando o titulo promete revelacao intelectual genuina.")
+bullet("Ilustracoes conceituais, infograficos ou imagens historicas/cientificas substituem o rosto sem perda na thumb.")
+bullet("Duracao ideal: 15-40 minutos. Videos abaixo de 10 min sinalizam superficialidade neste nicho.")
+bullet("Hook deve estabelecer relevancia pratica nos primeiros 30s (\"por que voce deveria se importar com isso\").")
+bullet("Linguagem ligeiramente mais formal e aceitavel - nao penalize.")
+
+destaque("Resumo: nicho Review de Produtos quebra a maioria das regras gerais (numeros, SEO, comprimento). Tutorial e Educacional quebram parcialmente. Entretenimento e o nicho onde as regras gerais sao mais estritas.")
+
+# 14
+h1("14. Reflexao de fechamento")
 quote("Quem vai dar certo aqui e quem realmente gosta de fazer videos, quem coloca um pouco mais de carinho no conteudo, nao automatiza tudo, usa IA com sabedoria. Nao tem almoco gratis.")
 p("O recado dos tres criadores converge para o mesmo ponto: o YouTube de 2025/2026 recompensa quem tem opiniao, vivencia e disposicao para o trabalho lento. Atalhos podem dar resultado por algumas semanas, mas o caminho sustentavel e o do criador com diferencial autoral - alguem que ninguem consegue copiar porque a materia-prima e a propria experiencia de vida.")
 
@@ -482,6 +551,13 @@ bullet("Escolher nicho viral (politica, filmes, musica, historia, noticias)")
 bullet("Trazer angulo unico para o nicho")
 bullet("Garantir tema com materia-prima inesgotavel")
 bullet("Nao automatizar 100% com IA")
+
+h2("Calibracao por nicho (resumo)")
+bullet("Review de Produtos: nome do produto + numeros + comparativos + preco no titulo. Produto dominante na thumb. Hook com produto fisico em 5s e veredicto explicito.")
+bullet("Tutorial: SEO funciona, numeros funcionam, capitulos obrigatorios, rosto e dispensavel.")
+bullet("Entretenimento: titulos negativos pesam mais, hook em 90s e obrigatorio, expressao facial extrema na thumb.")
+bullet("Noticias: 8-12 min sao OK, datas e numeros agregam, hook em 15s.")
+bullet("Educacional: capitulos obrigatorios, perguntas no titulo, lacuna de curiosidade tem peso maior.")
 
 pdf.ln(8)
 pdf.set_font("DejaVu", "I", 9)
